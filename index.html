@@ -8,16 +8,23 @@
 
 <!--
   ══════════════════════════════════════════════════════════════════
-  PENDIENTES: solo faltan los enlaces reales de la sección "Recursos"
+  PENDIENTES
   ══════════════════════════════════════════════════════════════════
-  Busca los 4 href="#" más abajo (cada uno tiene un comentario EDITAR
-  justo encima) y reemplázalos por:
-    1. La URL de tu repositorio de GitHub
-    2. El enlace al PDF del documento de investigación
-    3. El enlace a la infografía
-    4. El enlace al podcast
-  Todo lo demás (nombre del proyecto, equipo, ODS, materiales, circuito)
-  ya está completo.
+  Ya están enlazados: el PDF (IRTRASmartPass.pdf), el podcast
+  (Timeline 1.mov) y el video de Tinkercad (tinkercad.mp4).
+  Solo faltan 2 href="#" (busca el comentario EDITAR arriba de cada uno):
+    1. La URL de tu repositorio de GitHub (aparece 2 veces: en el
+       botón del menú y en la tarjeta "Repositorio")
+    2. El enlace a la infografía (tarjeta "Infografía")
+
+  IMPORTANTE sobre los archivos nuevos: coloca estos 3 archivos en la
+  MISMA carpeta que este index.html cuando subas todo a GitHub:
+    - IRTRASmartPass.pdf
+    - Timeline 1.mov   (el nombre debe quedar EXACTO, con el espacio;
+      el código ya usa "Timeline%201.mov" para que el espacio funcione
+      como URL. Si prefieres evitarte problemas, puedes renombrar el
+      archivo a "timeline-1.mov" sin espacio y cambiar el href a eso)
+    - tinkercad.mp4
   ══════════════════════════════════════════════════════════════════
 -->
 
@@ -432,10 +439,8 @@
       </div>
 
       <div class="hero-cta">
-        <!-- EDITAR: enlace al PDF del documento de investigación en GitHub -->
-        <a class="btn btn-copper" href="#">Ver investigación completa</a>
-        <!-- EDITAR: enlace al podcast (YouTube oculto u otro host) -->
-        <a class="btn btn-ghost-dark" href="#">Escuchar el podcast</a>
+        <a class="btn btn-copper" href="IRTRASmartPass.pdf" target="_blank" rel="noopener">Ver investigación completa</a>
+        <a class="btn btn-ghost-dark" href="Timeline%201.mov" target="_blank" rel="noopener">Escuchar el podcast</a>
       </div>
 
     </div>
@@ -549,6 +554,14 @@
             <img src="circuito.png" alt="Circuito armado en Tinkercad: Arduino Uno con sensor receptor IR, botón pulsador y tres LEDs RGB en protoboard">
           </div>
           <p class="circuit-caption">Circuito simulado en Tinkercad: Arduino Uno, sensor IR, botón y 3 LEDs RGB.</p>
+
+          <div class="circuit-frame" style="margin-top:18px;">
+            <video controls preload="metadata" style="width:100%; display:block;">
+              <source src="tinkercad.mp4" type="video/mp4">
+              Tu navegador no soporta el video. <a href="tinkercad.mp4">Descárgalo aquí</a>.
+            </video>
+          </div>
+          <p class="circuit-caption">Video de la simulación funcionando en Tinkercad.</p>
         </div>
       </div>
     </div>
@@ -609,8 +622,7 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="14 3 14 9 20 9"/></svg>
           <h3>Documento de investigación</h3>
           <p>Informe completo con las 5 temáticas del proyecto y referencias APA.</p>
-          <!-- EDITAR: enlace al PDF del informe -->
-          <a href="#" target="_blank" rel="noopener">Ver documento</a>
+          <a href="IRTRASmartPass.pdf" target="_blank" rel="noopener">Ver documento</a>
         </div>
         <div class="res-card">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="4" width="18" height="15" rx="1"/><circle cx="8.5" cy="9.5" r="1.5"/><path d="M21 15l-5-5-9 9"/></svg>
@@ -623,8 +635,7 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 12a9 9 0 0 1 18 0"/><path d="M3 12v4a2 2 0 0 0 2 2h1v-7H4a1 1 0 0 0-1 1z"/><path d="M21 12v4a2 2 0 0 1-2 2h-1v-7h1a1 1 0 0 1 2 1z"/></svg>
           <h3>Podcast</h3>
           <p>Explicación en audio del proyecto y su impacto (máx. 5 minutos).</p>
-          <!-- EDITAR: enlace al podcast -->
-          <a href="#" target="_blank" rel="noopener">Escuchar podcast</a>
+          <a href="Timeline%201.mov" target="_blank" rel="noopener">Escuchar podcast</a>
         </div>
       </div>
     </div>
