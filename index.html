@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IRTRA SmartPass · Consultoría técnica IRTRA Petapa</title>
+<meta name="description" content="Sistema electrónico autónomo que automatiza la validación de acceso a las atracciones de IRTRA Petapa mediante un sensor infrarrojo y señalización LED.">
+
+<!--
+  ══════════════════════════════════════════════════════════════════
+  PENDIENTES: solo faltan los enlaces reales de la sección "Recursos"
+  ══════════════════════════════════════════════════════════════════
+  Busca los 4 href="#" más abajo (cada uno tiene un comentario EDITAR
+  justo encima) y reemplázalos por:
+    1. La URL de tu repositorio de GitHub
+    2. El enlace al PDF del documento de investigación
+    3. El enlace a la infografía
+    4. El enlace al podcast
+  Todo lo demás (nombre del proyecto, equipo, ODS, materiales, circuito)
+  ya está completo.
+  ══════════════════════════════════════════════════════════════════
+-->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --navy:#0F1E2C;
+    --navy-deep:#0A1620;
+    --blueprint:#2D5C79;
+    --paper:#EEE8DB;
+    --paper-alt:#E7E9DD;
+    --ink:#16222C;
+    --paper-text:#F3EFE4;
+    --copper:#C1743D;
+    --copper-soft:#D69666;
+    --sage:#3E7A5D;
+    --line:rgba(15,30,44,0.12);
+    --line-dark:rgba(243,239,228,0.14);
+    --radius:2px;
+    --maxw:1120px;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth; scroll-padding-top:88px;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'IBM Plex Sans', sans-serif;
+    font-size:16px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3{
+    font-family:'Fraunces', serif;
+    font-weight:500;
+    line-height:1.08;
+    margin:0;
+  }
+  p{margin:0;}
+  a{color:inherit;}
+  img{max-width:100%; display:block;}
+  .wrap{max-width:var(--maxw); margin:0 auto; padding:0 clamp(20px,5vw,48px);}
+
+  :focus-visible{outline:2px solid var(--copper); outline-offset:3px;}
+
+  .accent-block{
+    border-left:2px solid var(--copper);
+    padding-left:20px;
+    font-size:1.02rem;
+    color:#33424B;
+  }
+
+  /* ============ HEADER ============ */
+  .site-header{
+    position:fixed; top:0; left:0; right:0; z-index:50;
+    background:rgba(15,30,44,0.92);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line-dark);
+  }
+  .header-inner{
+    display:flex; align-items:center; justify-content:space-between;
+    height:76px;
+  }
+  .brand{display:flex; align-items:center; gap:12px; color:var(--paper-text); text-decoration:none;}
+  .brand svg{width:30px; height:30px; flex:none;}
+  .brand-text{display:flex; flex-direction:column; line-height:1.15;}
+  .brand-text strong{font-family:'Fraunces', serif; font-size:1.02rem; font-weight:600;}
+  .brand-text span{font-size:0.72rem; color:#B9C4CC;}
+
+  nav.main-nav{display:flex; align-items:center; gap:clamp(18px,3vw,34px);}
+  nav.main-nav a{
+    color:var(--paper-text);
+    text-decoration:none;
+    font-size:0.92rem;
+    position:relative;
+    padding:6px 0;
+  }
+  nav.main-nav a:hover{color:var(--copper-soft);}
+
+  .btn{
+    display:inline-flex; align-items:center; gap:8px;
+    padding:12px 22px;
+    border-radius:var(--radius);
+    font-size:0.92rem;
+    font-weight:500;
+    text-decoration:none;
+    border:1px solid transparent;
+    cursor:pointer;
+    transition:transform .15s ease, background .15s ease;
+  }
+  .btn:hover{transform:translateY(-1px);}
+  .btn-copper{background:var(--copper); color:var(--navy-deep);}
+  .btn-copper:hover{background:var(--copper-soft);}
+  .btn-ghost-dark{border-color:var(--line-dark); color:var(--paper-text);}
+  .btn-ghost-dark:hover{border-color:var(--copper-soft); color:var(--copper-soft);}
+
+  .nav-toggle{
+    display:none; background:none; border:none; cursor:pointer;
+    width:34px; height:34px; flex-direction:column; justify-content:center; gap:5px;
+  }
+  .nav-toggle span{display:block; height:2px; background:var(--paper-text); border-radius:2px;}
+
+  /* ============ HERO ============ */
+  .hero{
+    position:relative;
+    padding:150px 0 100px;
+    background:var(--navy);
+    color:var(--paper-text);
+    overflow:hidden;
+  }
+  .hero-grid{
+    position:absolute; inset:0;
+    background-image:
+      linear-gradient(var(--line-dark) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line-dark) 1px, transparent 1px);
+    background-size:42px 42px;
+    mask-image:radial-gradient(ellipse 80% 60% at 50% 30%, black 40%, transparent 90%);
+    opacity:0.7;
+  }
+  .signal-line{
+    position:absolute; left:0; right:0; top:46%; height:1px;
+    background:var(--line-dark);
+  }
+  .signal-line::after{
+    content:'';
+    position:absolute; top:-1px; left:0; height:3px; width:140px;
+    background:linear-gradient(90deg, transparent, var(--copper-soft), transparent);
+    animation:travel 6s linear infinite;
+  }
+  @keyframes travel{
+    0%{ left:-160px; }
+    100%{ left:110%; }
+  }
+
+  .hero-inner{position:relative; z-index:2;}
+  .kicker-row{
+    display:flex; align-items:center; justify-content:space-between;
+    flex-wrap:wrap; gap:14px;
+    margin-bottom:34px;
+  }
+  .kicker{font-size:0.88rem; color:#B9C4CC;}
+
+  .ods-badge{
+    display:inline-flex; align-items:center; gap:10px;
+    border:1px solid var(--line-dark);
+    padding:8px 14px;
+    border-radius:999px;
+    font-size:0.82rem;
+  }
+  .ods-dot{
+    width:22px; height:22px; border-radius:50%;
+    background:var(--sage);
+    color:#fff; font-size:0.72rem; font-weight:600;
+    display:flex; align-items:center; justify-content:center;
+    flex:none;
+  }
+
+  .hero h1{
+    font-size:clamp(2.5rem, 4.2vw + 1rem, 4.4rem);
+    font-weight:500;
+    max-width:16ch;
+    margin-bottom:22px;
+  }
+  .hero-sub{
+    max-width:56ch;
+    font-size:clamp(1.02rem, 1.4vw, 1.2rem);
+    color:#D8DEE0;
+    margin-bottom:36px;
+  }
+  .hero-meta{
+    display:flex; flex-wrap:wrap; gap:10px 28px;
+    font-size:0.86rem; color:#9FADB6;
+    margin-bottom:38px;
+    border-top:1px solid var(--line-dark);
+    padding-top:18px;
+  }
+  .hero-cta{display:flex; flex-wrap:wrap; gap:14px;}
+
+  /* ============ SECTIONS ============ */
+  .section{padding:96px 0;}
+  .section--dark{background:var(--navy); color:var(--paper-text);}
+  .section--dark h2{color:var(--paper-text);}
+  .section--alt{background:var(--paper-alt);}
+
+  .section-head{
+    display:flex; align-items:flex-start; gap:22px;
+    margin-bottom:48px;
+  }
+  .section-num{
+    font-family:'Fraunces', serif;
+    font-weight:300;
+    font-size:2.6rem;
+    color:var(--copper);
+    line-height:1;
+  }
+  .section--dark .section-num{color:var(--copper-soft);}
+  .section-head h2{font-size:clamp(1.7rem, 2.4vw, 2.35rem);}
+  .section-head p{
+    margin-top:8px; max-width:52ch; color:#4B5A63; font-size:0.98rem;
+  }
+  .section--dark .section-head p{color:#B9C4CC;}
+
+  .two-col{
+    display:grid; grid-template-columns:1.5fr 1fr; gap:48px;
+    align-items:start;
+  }
+  .callout{
+    background:var(--paper);
+    border:1px solid var(--line);
+    padding:28px;
+  }
+  .section--dark .callout{background:rgba(243,239,228,0.05); border-color:var(--line-dark);}
+  .callout .num{
+    font-family:'Fraunces', serif; font-size:2.4rem; color:var(--copper);
+    display:block; margin-bottom:6px;
+  }
+  .callout p{font-size:0.92rem; color:#4B5A63;}
+  .section--dark .callout p{color:#B9C4CC;}
+
+  .flow{
+    display:flex; align-items:center; gap:0; margin-top:46px; flex-wrap:wrap;
+  }
+  .flow-node{
+    border:1px solid var(--line-dark);
+    padding:18px 22px;
+    min-width:150px;
+    text-align:center;
+  }
+  .flow-node strong{display:block; font-size:0.98rem; margin-bottom:4px;}
+  .flow-node span{font-size:0.78rem; color:#9FADB6;}
+  .flow-arrow{
+    flex:1; min-width:40px; height:1px;
+    background:var(--line-dark);
+    position:relative; margin:0 4px;
+  }
+  .flow-arrow::after{
+    content:'';
+    position:absolute; right:0; top:-3px;
+    width:0; height:0;
+    border-top:4px solid transparent;
+    border-bottom:4px solid transparent;
+    border-left:6px solid var(--line-dark);
+  }
+
+  .spec-grid{display:grid; grid-template-columns:1.3fr 1fr; gap:48px; align-items:start;}
+  table.materials{width:100%; border-collapse:collapse; font-size:0.94rem;}
+  table.materials th, table.materials td{
+    text-align:left; padding:12px 14px; border-bottom:1px solid var(--line);
+  }
+  table.materials th{
+    font-weight:600; color:#33424B; font-size:0.82rem;
+  }
+  table.materials td:first-child{font-family:'IBM Plex Mono', monospace; font-size:0.8rem;}
+
+  .status{
+    display:inline-flex; align-items:center; gap:8px;
+    font-size:0.9rem; font-weight:500;
+    padding:8px 14px; border:1px solid var(--line);
+    margin-bottom:18px;
+  }
+  .status .dot{width:9px; height:9px; border-radius:50%; background:var(--sage);}
+
+  .circuit-frame{
+    border:1px solid var(--line);
+    background:#fff;
+    padding:10px;
+    margin-top:14px;
+  }
+  .circuit-frame img{width:100%; height:auto;}
+  .circuit-caption{
+    font-size:0.8rem; color:#6B7680; margin-top:8px;
+  }
+
+  /* equipo */
+  .team-grid{
+    display:grid; grid-template-columns:repeat(2,1fr); gap:32px;
+    max-width:640px;
+  }
+  .team-card{
+    background:#fff; border:1px solid var(--line); padding:28px 24px; text-align:center;
+  }
+  .avatar-icon{
+    width:72px; height:72px; border-radius:50%; margin:0 auto 18px;
+    background:rgba(62,122,93,0.12);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .avatar-icon svg{width:30px; height:30px; color:var(--sage);}
+  .team-card h3{font-size:1.15rem; margin-bottom:4px;}
+  .team-card .role{font-size:0.86rem; color:var(--copper); margin-bottom:10px;}
+  .team-card .desc{font-size:0.86rem; color:#4B5A63;}
+
+  /* recursos */
+  .res-grid{
+    display:grid; grid-template-columns:repeat(4,1fr); gap:24px;
+  }
+  .res-card{
+    border:1px solid var(--line-dark);
+    padding:26px 22px;
+    display:flex; flex-direction:column; gap:14px;
+  }
+  .res-card svg{width:28px; height:28px; color:var(--copper-soft);}
+  .res-card h3{font-size:1.02rem; color:var(--paper-text); font-weight:500;}
+  .res-card p{font-size:0.85rem; color:#9FADB6; flex:1;}
+  .res-card a{font-size:0.88rem; color:var(--copper-soft); text-decoration:none; font-weight:500;}
+  .res-card a:hover{color:var(--paper-text);}
+
+  /* footer */
+  footer{background:var(--navy-deep); color:#8C99A1; padding:44px 0 30px;}
+  .footer-inner{
+    display:flex; justify-content:space-between; flex-wrap:wrap; gap:16px;
+    font-size:0.82rem;
+    border-bottom:1px solid var(--line-dark);
+    padding-bottom:24px; margin-bottom:18px;
+  }
+  .footer-inner strong{color:var(--paper-text); font-weight:500;}
+  .footer-bottom{font-size:0.76rem; display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;}
+
+  @media (max-width:900px){
+    .two-col, .spec-grid{grid-template-columns:1fr;}
+    .res-grid{grid-template-columns:1fr 1fr;}
+  }
+  @media (max-width:760px){
+    nav.main-nav{
+      position:absolute; top:76px; left:0; right:0;
+      background:var(--navy); border-bottom:1px solid var(--line-dark);
+      flex-direction:column; align-items:flex-start; gap:2px;
+      padding:10px clamp(20px,5vw,48px) 20px;
+      display:none;
+    }
+    nav.main-nav.open{display:flex;}
+    nav.main-nav a{padding:10px 0; width:100%;}
+    .nav-toggle{display:flex;}
+    .header-inner .btn-copper{display:none;}
+    .team-grid, .res-grid{grid-template-columns:1fr;}
+    .hero{padding:130px 0 70px;}
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    .signal-line::after{animation:none; left:20%;}
+    .btn:hover{transform:none;}
+  }
+</style>
+</head>
+<body>
+
+<a href="#contenido" style="position:absolute; left:-999px;">Saltar al contenido</a>
+
+<!-- ============ HEADER ============ -->
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a href="#top" class="brand">
+      <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="16" cy="6" r="3" stroke="#F3EFE4" stroke-width="1.6"/>
+        <circle cx="6" cy="24" r="3" stroke="#C1743D" stroke-width="1.6"/>
+        <circle cx="26" cy="24" r="3" stroke="#F3EFE4" stroke-width="1.6"/>
+        <path d="M16 9V16M16 16L8.5 21.5M16 16L23.5 21.5" stroke="#8C99A1" stroke-width="1.3"/>
+      </svg>
+      <span class="brand-text">
+        <strong>IRTRA SmartPass</strong>
+        <span>Consultoría técnica · IRTRA Petapa</span>
+      </span>
+    </a>
+
+    <button class="nav-toggle" id="navToggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="mainNav">
+      <span></span><span></span><span></span>
+    </button>
+
+    <nav class="main-nav" id="mainNav">
+      <a href="#diagnostico">Diagnóstico</a>
+      <a href="#solucion">Solución</a>
+      <a href="#especificaciones">Especificaciones</a>
+      <a href="#equipo">Equipo</a>
+      <a href="#recursos">Recursos</a>
+    </nav>
+
+    <!-- EDITAR: reemplazar href="#" por la URL real del repositorio de GitHub -->
+    <a class="btn btn-copper" href="#" target="_blank" rel="noopener">Ver en GitHub</a>
+  </div>
+</header>
+
+<main id="contenido">
+
+  <!-- ============ HERO ============ -->
+  <section class="hero" id="top">
+    <div class="hero-grid" aria-hidden="true"></div>
+    <div class="signal-line" aria-hidden="true"></div>
+    <div class="wrap hero-inner">
+
+      <div class="kicker-row">
+        <p class="kicker">Informe de consultoría preparado para <strong>la administración de IRTRA Petapa</strong></p>
+        <div class="ods-badge">
+          <span class="ods-dot">9</span>
+          <span>ODS 9 · Industria, Innovación e Infraestructura</span>
+        </div>
+      </div>
+
+      <h1>IRTRA SmartPass</h1>
+      <p class="hero-sub">
+        Sistema electrónico que recibe un código de acceso mediante un sensor infrarrojo y decide,
+        sin intervención humana, si debe aceptarse, rechazarse o marcarse como repetido.
+      </p>
+
+      <div class="hero-meta">
+        <span>Equipo consultor: Martinez · López</span>
+        <span>Undécimo D</span>
+        <span>Prof. Godoy · Tecnología</span>
+      </div>
+
+      <div class="hero-cta">
+        <!-- EDITAR: enlace al PDF del documento de investigación en GitHub -->
+        <a class="btn btn-copper" href="#">Ver investigación completa</a>
+        <!-- EDITAR: enlace al podcast (YouTube oculto u otro host) -->
+        <a class="btn btn-ghost-dark" href="#">Escuchar el podcast</a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============ 01 DIAGNÓSTICO ============ -->
+  <section class="section" id="diagnostico">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="section-num">01</span>
+        <div>
+          <h2>Diagnóstico</h2>
+          <p>El problema que identificamos durante el levantamiento técnico en el parque.</p>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <p class="accent-block">
+          El control de acceso a las atracciones de IRTRA Petapa depende hoy de la comprobación
+          manual de una tarjeta física de puntos: el operador debe perforarla o revisarla
+          visualmente cada vez que un visitante quiere abordar un juego. Este mecanismo no permite
+          verificar de forma automática si un código ya fue utilizado, si la tarjeta cuenta con
+          puntos suficientes, o si corresponde a un intento fraudulento de reutilización, lo que
+          genera tiempos de espera más largos, errores humanos en el conteo y vulnerabilidad ante
+          el uso duplicado de una misma tarjeta.
+        </p>
+        <div class="callout">
+          <span class="num">3</span>
+          <p>Escenarios que el sistema evalúa automáticamente en cada intento de acceso: aceptado, rechazado o repetido.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 02 SOLUCIÓN PROPUESTA ============ -->
+  <section class="section section--dark" id="solucion">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="section-num">02</span>
+        <div>
+          <h2>Solución propuesta</h2>
+          <p>Cómo el sistema electrónico autónomo resuelve el diagnóstico anterior.</p>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <p class="accent-block" style="color:#D8DEE0;">
+          IRTRA SmartPass es un sistema electrónico autónomo que recibe, mediante un sensor
+          infrarrojo, un código equivalente a la tarjeta de puntos del visitante. Un
+          microcontrolador Arduino Uno procesa la señal y clasifica el resultado en tres estados
+          —aceptado, rechazado o repetido— comunicándolo de inmediato mediante tres LEDs RGB, sin
+          que el operador tenga que perforar ni revisar nada manualmente.
+        </p>
+        <div class="callout">
+          <p>El proyecto se alinea con el ODS 9 (Industria, Innovación e Infraestructura) al
+          introducir infraestructura digital de bajo costo que moderniza un proceso operativo del
+          parque, hoy dependiente por completo del personal.</p>
+        </div>
+      </div>
+
+      <div class="flow">
+        <div class="flow-node">
+          <strong>Sensor IR</strong>
+          <span>Recibe el código</span>
+        </div>
+        <div class="flow-arrow"></div>
+        <div class="flow-node">
+          <strong>Arduino Uno R3</strong>
+          <span>Procesa la señal</span>
+        </div>
+        <div class="flow-arrow"></div>
+        <div class="flow-node">
+          <strong>LEDs RGB (x3)</strong>
+          <span>Señaliza el resultado</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 03 ESPECIFICACIONES TÉCNICAS ============ -->
+  <section class="section" id="especificaciones">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="section-num">03</span>
+        <div>
+          <h2>Especificaciones técnicas</h2>
+          <p>Materiales del circuito y estado de la simulación en Tinkercad.</p>
+        </div>
+      </div>
+
+      <div class="spec-grid">
+        <table class="materials">
+          <thead>
+            <tr><th>Componente</th><th>Función en el sistema</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Arduino Uno R3</td><td>Unidad central de procesamiento</td></tr>
+            <tr><td>Sensor receptor IR (VS1838B)</td><td>Recibe el código de acceso simulado</td></tr>
+            <tr><td>LEDs RGB (x3)</td><td>Señalizan aceptado, rechazado o repetido</td></tr>
+            <tr><td>Botón pulsador</td><td>Enciende y apaga el punto de acceso</td></tr>
+            <tr><td>Protoboard</td><td>Montaje del circuito</td></tr>
+            <tr><td>Cables jumper</td><td>Conexión entre componentes</td></tr>
+          </tbody>
+        </table>
+
+        <div>
+          <div class="status">
+            <span class="dot"></span> Estado del sistema: Funciona
+          </div>
+          <div class="circuit-frame">
+            <img src="circuito.png" alt="Circuito armado en Tinkercad: Arduino Uno con sensor receptor IR, botón pulsador y tres LEDs RGB en protoboard">
+          </div>
+          <p class="circuit-caption">Circuito simulado en Tinkercad: Arduino Uno, sensor IR, botón y 3 LEDs RGB.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 04 EQUIPO CONSULTOR ============ -->
+  <section class="section section--alt" id="equipo">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="section-num">04</span>
+        <div>
+          <h2>Equipo consultor</h2>
+          <p>Las personas responsables del levantamiento y del diseño de la solución.</p>
+        </div>
+      </div>
+
+      <div class="team-grid">
+        <div class="team-card">
+          <div class="avatar-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="8" r="3.2"/><path d="M5 20c0-3.9 3.1-7 7-7s7 3.1 7 7"/></svg>
+          </div>
+          <h3>José Raphael Martinez</h3>
+          <p class="role">Ingeniero de automatización</p>
+          <p class="desc">Diseño de la lógica de validación y del circuito en Tinkercad.</p>
+        </div>
+        <div class="team-card">
+          <div class="avatar-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="8" r="3.2"/><path d="M5 20c0-3.9 3.1-7 7-7s7 3.1 7 7"/></svg>
+          </div>
+          <h3>Mario Roberto López</h3>
+          <p class="role">Analista de sostenibilidad (ODS)</p>
+          <p class="desc">Documentación técnica y justificación del ODS 9.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 05 RECURSOS Y VERIFICACIÓN ============ -->
+  <section class="section section--dark" id="recursos">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="section-num">05</span>
+        <div>
+          <h2>Recursos y verificación</h2>
+          <p>Todos los productos de este proyecto, listos para revisión.</p>
+        </div>
+      </div>
+
+      <div class="res-grid">
+        <div class="res-card">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><polyline points="8 6 3 12 8 18"/><polyline points="16 6 21 12 16 18"/></svg>
+          <h3>Repositorio</h3>
+          <p>Código, documento de investigación e infografía del proyecto.</p>
+          <!-- EDITAR: URL real del repositorio de GitHub -->
+          <a href="#" target="_blank" rel="noopener">Ver repositorio</a>
+        </div>
+        <div class="res-card">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="14 3 14 9 20 9"/></svg>
+          <h3>Documento de investigación</h3>
+          <p>Informe completo con las 5 temáticas del proyecto y referencias APA.</p>
+          <!-- EDITAR: enlace al PDF del informe -->
+          <a href="#" target="_blank" rel="noopener">Ver documento</a>
+        </div>
+        <div class="res-card">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="4" width="18" height="15" rx="1"/><circle cx="8.5" cy="9.5" r="1.5"/><path d="M21 15l-5-5-9 9"/></svg>
+          <h3>Infografía</h3>
+          <p>Resumen visual del proyecto para las autoridades de IRTRA Petapa.</p>
+          <!-- EDITAR: enlace a la infografía -->
+          <a href="#" target="_blank" rel="noopener">Ver infografía</a>
+        </div>
+        <div class="res-card">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 12a9 9 0 0 1 18 0"/><path d="M3 12v4a2 2 0 0 0 2 2h1v-7H4a1 1 0 0 0-1 1z"/><path d="M21 12v4a2 2 0 0 1-2 2h-1v-7h1a1 1 0 0 1 2 1z"/></svg>
+          <h3>Podcast</h3>
+          <p>Explicación en audio del proyecto y su impacto (máx. 5 minutos).</p>
+          <!-- EDITAR: enlace al podcast -->
+          <a href="#" target="_blank" rel="noopener">Escuchar podcast</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="wrap">
+    <div class="footer-inner">
+      <div>
+        <strong>IRTRA SmartPass</strong><br>
+        Consultoría entregada a la administración de IRTRA Petapa
+      </div>
+      <div>
+        Colegio Capouilliez<br>
+        Tecnología · Undécimo D · Prof. Godoy
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© <span id="year"></span> Martinez · López</span>
+      <span>Proyecto final · Tecnología</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  const navToggle = document.getElementById('navToggle');
+  const mainNav = document.getElementById('mainNav');
+  navToggle.addEventListener('click', () => {
+    const isOpen = mainNav.classList.toggle('open');
+    navToggle.setAttribute('aria-expanded', isOpen);
+  });
+  mainNav.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+      mainNav.classList.remove('open');
+      navToggle.setAttribute('aria-expanded', 'false');
+    });
+  });
+</script>
+
+</body>
+</html>
